@@ -1,20 +1,32 @@
 #!/bin/bash
+curDir=$PWD
+west="us-west-2.tfvars"
+east="us-east-2.tfvars"
+
 case "$1" in
+  "-p")
+    execType="plan"
+    noVars="true"
+    ;;
   "-pw")
     execType="plan"
-    fileName="us-west-2.tfvars"
+    fileName=$west
     ;;
   "-pe")
     execType="plan"
-    fileName="us-east-2.tfvars"
+    fileName=$east
+    ;;
+  "-a")
+    execType="apply"
+    noVars="true"
     ;;
   "-aw")
     execType="apply"
-    fileName="us-west-2.tfvars"
+    fileName=$west
     ;;
   "-ae")
     execType="apply"
-    fileName="us-east-2.tfvars"
+    fileName=$east
     ;;
   "-i")
     execType="init"
@@ -29,24 +41,28 @@ case "$1" in
   *)
     echo -e "Usage: t [options...]
 Options:
-  -i  Run a terraform init
-  -iu Run a terraform init --upgrade
+  -i  terraform init
+  -iu terraform init --upgrade
   -id Delete .terraform dir and run a terraform init
-  -pw Run terraform plan using us-west-2 vars file
-  -pe Run terraform plan using us-east-2 vars file
-  -aw Run terraform apply using us-west-2 vars file
-  -ae Run terraform apply using us-east-2 vars file
+  -p  terraform plan with NO vars file
+  -pw terraform plan using us-west-2 vars file
+  -pe terraform plan using us-east-2 vars file
+  -a  terraform apply with NO vars file
+  -aw terraform apply using us-west-2 vars file
+  -ae terraform apply using us-east-2 vars file
   -h  View usage"
     exit 1
     ;;
 esac
 
-curDir=$PWD
-
 if [ -z ${fileName+x} ]; then
   if [ ${rmCmd+x} ]; then
     echo "$rmCmd && terraform $execType ${@:2}"
     $rmCmd && terraform $execType ${@:2}
+    exit
+  elif [ ${rmCmd+x} ]; then
+    echo "$terraform $execType ${@:2}"
+    terraform $execType ${@:2}
     exit
   else
     echo "terraform $execType ${@:2}"
@@ -67,4 +83,4 @@ else
   done
 fi
 
-echo "ERROR: I traversed up 5 dir levels and never found a var file. You in the right place??"
+echo "ERROR: Traversed up 5 dir levels and found no tfvars file named $fileName"

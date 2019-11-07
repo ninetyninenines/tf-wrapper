@@ -3,7 +3,7 @@
 This simple bash script will auto-locate the tfvars file when running plans and applies
 
 ## Usage
-
+```
 Usage: t [options...]
 Options:
   -i  terraform init
@@ -16,6 +16,8 @@ Options:
   -aw terraform apply using us-west-2 vars file
   -ae terraform apply using us-east-2 vars file
   -h  View usage"
+```
 
 You may also pass arbitrary terraform arguments to the script.
-Example: t -pw -target=module.create_ec2_instance
+Example:
+```t -pw -target=module.create_ec2_instance```

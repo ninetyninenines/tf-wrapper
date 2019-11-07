@@ -19,5 +19,8 @@ Options:
 ```
 
 You may also pass arbitrary terraform arguments to the script.
+
+```
 Example:
-```t -pw -target=module.create_ec2_instance```
+t -pw -target=module.create_ec2_instance
+```

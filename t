@@ -43,14 +43,14 @@ case "$1" in
 Options:
   -i  terraform init
   -iu terraform init --upgrade
-  -id Delete .terraform dir and run a terraform init
+  -id delete .terraform dir and run a terraform init
   -p  terraform plan with NO vars file
   -pw terraform plan using us-west-2 vars file
   -pe terraform plan using us-east-2 vars file
   -a  terraform apply with NO vars file
   -aw terraform apply using us-west-2 vars file
   -ae terraform apply using us-east-2 vars file
-  -h  View usage"
+  -h  view usage"
     exit 1
     ;;
 esac

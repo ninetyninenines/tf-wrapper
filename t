@@ -3,56 +3,88 @@ curDir=$PWD
 west="us-west-2.tfvars"
 east="us-east-2.tfvars"
 
-case "$1" in
-  "-p")
-    execType="plan"
-    noVars="true"
-    ;;
-  "-pw")
-    execType="plan"
-    fileName=$west
-    ;;
-  "-pe")
-    execType="plan"
-    fileName=$east
-    ;;
-  "-a")
-    execType="apply"
-    noVars="true"
-    ;;
-  "-aw")
-    execType="apply"
-    fileName=$west
-    ;;
-  "-ae")
-    execType="apply"
-    fileName=$east
-    ;;
-  "-i")
-    execType="init"
-    ;;
-  "-iu")
-    execType="init --upgrade"
-    ;;
-  "-id")
-    execType="init"
-    rmCmd="rm -rf .terraform"
-    ;;
-  *)
-    echo -e "Usage: t [options...]
+function usage {
+  echo -e "Usage: t [options...]
 Options:
-  -i  terraform init
-  -iu terraform init --upgrade
-  -id delete .terraform dir and run a terraform init
-  -p  terraform plan with NO vars file
-  -pw terraform plan using us-west-2 vars file
-  -pe terraform plan using us-east-2 vars file
-  -a  terraform apply with NO vars file
-  -aw terraform apply using us-west-2 vars file
-  -ae terraform apply using us-east-2 vars file
+  -i  init
+  -iu init --upgrade
+  -id delete .terraform dir and run an init
+  -p  plan with NO vars file
+  -pw plan using us-west-2 vars file
+  -pe plan using us-east-2 vars file
+  -a  apply with NO vars file
+  -aw apply using us-west-2 vars file
+  -ae apply using us-east-2 vars file
+  -wc create new workspace
+  -wd delete workspace
+  -wl list workspaces
+  -ws select workspace
   -h  view usage"
-    exit 1
-    ;;
+  exit 
+}
+
+function workspace {
+  case "$1" in
+    -wc)
+     terraform workspace new $2
+     exit
+     ;;
+    -wd)
+     terraform workspace delete $2
+     exit
+     ;;
+    -wl)
+     terraform workspace list
+     exit
+     ;;
+    -ws)
+     terraform workspace select $2
+     exit
+     ;;
+  esac
+}
+
+case "$1" in
+  -p)
+   execType="plan"
+   noVars="true"
+   ;;
+  -pw)
+   execType="plan"
+   fileName=$west
+   ;;
+  -pe)
+   execType="plan"
+   fileName=$east
+   ;;
+  -a)
+   execType="apply"
+   noVars="true"
+   ;;
+  -aw)
+   execType="apply"
+   fileName=$west
+   ;;
+  -ae)
+   execType="apply"
+   fileName=$east
+   ;;
+  -i)
+   execType="init"
+   ;;
+  -iu)
+   execType="init --upgrade"
+   ;;
+  -id)
+   execType="init"
+   rmCmd="rm -rf .terraform"
+   ;;
+  -w[cdls])
+   workspace $1 $2
+   ;;
+  *)
+   usage
+   ;;
 esac
 
 if [ -z ${fileName+x} ]; then
@@ -84,3 +116,4 @@ else
 fi
 
 echo "ERROR: Traversed up 5 dir levels and found no tfvars file named $fileName"
+exit 1

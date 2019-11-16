@@ -15,6 +15,9 @@ Options:
   -a  apply with NO vars file
   -aw apply using us-west-2 vars file
   -ae apply using us-east-2 vars file
+  -d  destroy with NO vars file
+  -dw destroy using us-west-2 vars file
+  -de destroy using us-east-2 vars file
   -wc create new workspace
   -wd delete workspace
   -wl list workspaces
@@ -67,6 +70,18 @@ case "$1" in
    ;;
   -ae)
    execType="apply"
+   fileName=$east
+   ;;
+  -d)
+   execType="destroy"
+   noVars="true"
+   ;;
+  -dw)
+   execType="destroy"
+   fileName=$west
+   ;;
+  -de)
+   execType="destroy"
    fileName=$east
    ;;
   -i)
